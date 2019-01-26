@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "polls")
-public class Poll{
+public class Poll {
 
     @Id
     @Column(name = "id")
@@ -70,16 +70,4 @@ public class Poll{
         this.views = views;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Option option = (Option) o;
-        return Objects.equals(id, option.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
