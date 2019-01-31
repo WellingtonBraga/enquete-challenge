@@ -1,11 +1,15 @@
 package br.com.enquetechallenge.services;
 
+import br.com.enquetechallenge.DTO.OptionRequestDTO;
+import br.com.enquetechallenge.DTO.PollRequestDTO;
+import br.com.enquetechallenge.DTO.PollResponseDTO;
 import br.com.enquetechallenge.entities.Option;
 import br.com.enquetechallenge.entities.Poll;
 import br.com.enquetechallenge.entities.Stats;
 import br.com.enquetechallenge.exceptions.ResourceNotFoundException;
 import br.com.enquetechallenge.repositories.OptionRepository;
 import br.com.enquetechallenge.repositories.PollRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,10 @@ public class PollService {
     @Autowired
     private OptionRepository optionRepository;
 
-    public ResponseEntity<?> findPollById(Long id) {
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public PollResponseDTO findPollById(Long id) {
         Poll p = pollRepository.findById(id).orElse(null);
 
         if (p == null) {
@@ -30,16 +37,21 @@ public class PollService {
         p.setViews(p.getViews() + 1);
         pollRepository.save(p);
 
-        return new ResponseEntity<>(p, HttpStatus.OK);
+        PollResponseDTO pollResponseDTO = modelMapper.map(p, PollResponseDTO.class);
+
+        return pollResponseDTO;
     }
 
-    public ResponseEntity<?> save(Poll poll) {
+    public PollResponseDTO save(PollRequestDTO pollRequestDTO) {
+
+        Poll poll = modelMapper.map(pollRequestDTO, Poll.class);
+
         for (Option option:
-                poll.getOptions()) {
+                pollRequestDTO.getOptions()) {
             option.setPoll(poll);
         }
 
-        return new ResponseEntity<>(pollRepository.save(poll), HttpStatus.OK);
+        return modelMapper.map(pollRepository.save(poll), PollResponseDTO.class);
     }
 
     public ResponseEntity<?> vote(Long id) {

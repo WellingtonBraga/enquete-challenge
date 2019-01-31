@@ -1,12 +1,7 @@
 package br.com.enquetechallenge.entities;
 
-import br.com.enquetechallenge.views.View;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "polls")
@@ -14,7 +9,7 @@ public class Poll {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
     @Column(name = "description")
@@ -33,8 +28,6 @@ public class Poll {
         this.options = options;
     }
 
-    @JsonProperty("poll_id")
-    @JsonView(View.Public.class)
     public Long getId() {
         return id;
     }
@@ -43,8 +36,6 @@ public class Poll {
         this.id = id;
     }
 
-    @JsonProperty("poll_description")
-    @JsonView(View.Poll.class)
     public String getDescription() {
         return description;
     }
@@ -53,7 +44,6 @@ public class Poll {
         this.description = description;
     }
 
-    @JsonView(View.Poll.class)
     public List<Option> getOptions() {
         return options;
     }
